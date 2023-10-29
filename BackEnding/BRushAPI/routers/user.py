@@ -66,3 +66,4 @@ def delete_user_by_id(request, user_id: int):
     user_data = User.objects.get(user_id=user_id)
     user_data.delete()
     return {"mensagem": "Usuário deletado com sucesso!"}
+

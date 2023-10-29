@@ -48,10 +48,12 @@ INSTALLED_APPS = [
     'BRushAPI',
     'drf_yasg',
     'rest_framework_simplejwt',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -61,6 +63,12 @@ MIDDLEWARE = [
     'BackEnding.middleware.process_put_patch'
     
 ]
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173"
+]
+
 
 ROOT_URLCONF = 'BackEnding.urls'
 
