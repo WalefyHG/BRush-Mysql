@@ -8,6 +8,7 @@ class User(AbstractUser):
     user_password = models.CharField(max_length=100)
     user_email = models.CharField(max_length=50)
     user_image = models.ImageField(upload_to='image/')
+    user_birthday = models.DateField(null=True, blank=True)
     password = None
     last_login = None
     is_superuser = None

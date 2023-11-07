@@ -1,10 +1,12 @@
 from typing import List, Optional
+from datetime import date
 from ninja import Schema
 
 class UserIn(Schema):
     user_name: str
     user_email: str
     user_password: str
+    user_birthday: date = None
     
     
 class UserOut(Schema):
@@ -12,19 +14,21 @@ class UserOut(Schema):
     user_name: str
     user_email: str
     user_password: str
+    user_birthday: date = None
 
 class UserResponse(Schema):
     mensagem: str
     
 
 class UserLogin(Schema):
-    user_name: str
+    user_email: str
     user_password: str
     
 class UserPut(Schema):
     user_name: Optional[str] = ''
     user_email: Optional[str] = ''
     user_password: Optional[str] = ''
+    user_birthday: Optional[date] = ''
 
 class TeamIn(Schema):
     team_name: str
