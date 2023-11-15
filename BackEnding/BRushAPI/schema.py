@@ -7,7 +7,8 @@ class UserIn(Schema):
     user_email: str
     user_password: str
     user_birthday: date = None
-    
+    user_lastName: str = None
+    user_firstName: str = None
     
 class UserOut(Schema):
     user_id: int
@@ -15,6 +16,9 @@ class UserOut(Schema):
     user_email: str
     user_password: str
     user_birthday: date = None
+    user_firstName: str = None
+    user_lastName: str = None
+    user_image: str = None
 
 class UserResponse(Schema):
     mensagem: str

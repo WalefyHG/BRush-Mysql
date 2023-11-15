@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import os
 
@@ -131,6 +132,7 @@ AUTH_USER_MODEL = 'BRushAPI.User'
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'user_id',
     'USER_ID_CLAIM': 'user_id',
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1), 
 }
 
 AUTHENTICATION_CLASSES = {

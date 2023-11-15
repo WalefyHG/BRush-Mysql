@@ -9,9 +9,16 @@ from ninja.errors import HttpError
 router = Router()
 
 
-@router.get("/todos", response=List[UserOut], auth=None)
-def list_users(request):
-    return User.objects.all()
+@router.get('/perfil', response=UserOut)
+def get_user_by_token(request):
+    return request.auth
+
+@router.get('/perfil/{user_name}', response=UserOut)
+def get_user_perfil_by_userName(request, user_name: str):
+    user_data = User.objects.get(
+        user_name=user_name
+    )
+    return user_data
 
 @router.post("/criando", response=UserResponse, auth=None)
 def create_user(request, user: UserIn, image: Optional[UploadedFile] = File(None)):
@@ -21,6 +28,8 @@ def create_user(request, user: UserIn, image: Optional[UploadedFile] = File(None
         user_email=user.user_email,
         user_password=password_hash,
         user_birthday=user.user_birthday,
+        user_firstName=user.user_firstName,
+        user_lastName=user.user_lastName,
         user_image= image
     )
     user_data.save()
@@ -39,9 +48,11 @@ def login(request, user: UserLogin):
     except User.DoesNotExist:
         raise HttpError(404, detail="Usuário não encontrado")
 
-@router.get("/pesquisar/{user_id}", response=UserOut)
-def get_user_by_id(request, user_id: int):
-    user_data = User.objects.get(user_id=user_id)
+@router.get("/pesquisar/{user_firstName}", response=List[UserOut])
+def get_user_by_id(request, user_firstName: str):
+    user_data =  User.objects.filter(
+        user_firstName__icontains=user_firstName
+    )
     return user_data
 
 @router.put("/atualizar/{user_id}", response=UserResponse)
