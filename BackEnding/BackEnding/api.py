@@ -1,6 +1,7 @@
 from ninja import NinjaAPI
 from BRushAPI.routers.user import router as UserRouter
 from BRushAPI.routers.team import router as TeamRouter
+from BRushAPI.routers.news import router as NoticeRouter
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from ninja.security import HttpBearer
 
@@ -18,3 +19,4 @@ api = NinjaAPI()
 
 api.add_router("/users", UserRouter, tags=["Users"], auth=JWTBearer())
 api.add_router("/teams", TeamRouter, tags=["Team"], auth=JWTBearer())
+api.add_router("/notices", NoticeRouter, tags=["Notices"], auth=JWTBearer())

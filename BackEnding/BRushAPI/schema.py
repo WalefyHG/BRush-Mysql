@@ -9,7 +9,9 @@ class UserIn(Schema):
     user_birthday: date = None
     user_lastName: str = None
     user_firstName: str = None
-    
+    user_idioma: str = None
+    user_games: str = None
+    user_pais: str = None
 class UserOut(Schema):
     user_id: int
     user_name: str
@@ -19,6 +21,10 @@ class UserOut(Schema):
     user_firstName: str = None
     user_lastName: str = None
     user_image: str = None
+    user_idioma: str = None
+    user_games: str = None
+    user_pais: str = None
+    is_confirmed: bool = None
 
 class UserResponse(Schema):
     mensagem: str
@@ -48,3 +54,16 @@ class TeamResponse(Schema):
 class TeamAssing(Schema):
     user_id: List[int]
     team_id: int
+
+
+class NoticeIn(Schema):
+    notice_title: str
+    notice_content: str
+    notice_date: date = None
+
+class NoticeOut(Schema):
+    notice_id: int
+    notice_title: str
+    notice_content: str
+    notice_date: date = None
+    notice_writer: UserOut = None
