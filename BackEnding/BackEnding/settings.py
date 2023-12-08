@@ -61,14 +61,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'BackEnding.middleware.process_put_patch'
+    'BackEnding.middleware.process_put_patch',
     
 ]
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+
 ]
+
+CORS_ALLOW_CREDENTIALS = True
+
 
 
 CORS_ALLOW_METHODS = [

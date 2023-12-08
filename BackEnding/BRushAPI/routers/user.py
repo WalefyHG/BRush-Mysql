@@ -2,13 +2,15 @@
 from datetime import datetime, timedelta, timezone
 from ninja import Router, UploadedFile, File
 from typing import List, Optional
-from ..schema import UserIn, UserLogin, UserOut, UserPut, UserResponse
+from ..schema import UserChangePassword, UserIn, UserLogin, UserOut, UserPut, UserResponse, UserSocialMedias
 from ..models import User, UserCode
 from django.contrib.auth.hashers import check_password, make_password
 from rest_framework_simplejwt.tokens import AccessToken
 from ninja.errors import HttpError
 from django.core.mail import send_mail
 import random, threading, string
+
+
 router = Router()
 
 def sending_code(user):
@@ -164,25 +166,32 @@ def get_user_by_id(request, user_firstName: str):
     )
     return user_data
 
-@router.put("/atualizar/{user_id}", response=UserResponse)
-def update_by_id(request, user_id: int, user: UserPut, image: Optional[UploadedFile] = File(None)):
-    user_data = User.objects.get(user_id=user_id)
+@router.put("/atualizar/{id}", response=UserOut)
+def update_by_id(request, id: int, user: UserPut, image: Optional[UploadedFile] = File(None), banner: Optional[UploadedFile] = File(None)):
+    user_data = User.objects.get(user_id=id)
     if user.user_name:
         user_data.user_name = user.user_name
     if user.user_email:
         user_data.user_email = user.user_email
-    if user.user_password:
-        user_data.user_password = make_password(user.user_password)
     if user.user_birthday:
         user_data.user_birthday = user.user_birthday
     if image:
         user_data.user_image = image
+    if user.user_idioma:
+        user_data.user_idioma = user.user_idioma
+    if user.user_games:
+        user_data.user_games = user.user_games
+    if user.user_pais:
+        user_data.user_pais = user.user_pais
+    if banner:
+        user_data.user_banner = banner
     user_data.save()
-    return {"mensagem": "Usuário atualizado com sucesso!"}
+    
+    return user_data
 
-@router.delete("/deletar/{user_id}", response=UserResponse)
-def delete_user_by_id(request, user_id: int):
-    user_data = User.objects.get(user_id=user_id)
+@router.delete("/deletar", response=UserResponse)
+def delete_user_by_id(request):
+    user_data = request.auth
     user_data.delete()
     return {"mensagem": "Usuário deletado com sucesso!"}
   
@@ -206,3 +215,31 @@ def verify_code(request, code: str):
             return {"mensagem": "Código expirado"}
     except UserCode.DoesNotExist:
         return {"mensagem": "Código não encontrado"}
+    
+@router.put('/atualizar_senha', response=UserResponse)
+def update_password(request, change_password: UserChangePassword):
+    user = request.auth
+    if change_password.senha_nova == change_password.confirmar_senha:
+        if check_password(change_password.senha_atual, user.user_password):
+            user.user_password = make_password(change_password.senha_nova)
+            user.save()
+            return {"mensagem": "Senha atualizada com sucesso"}
+        else:
+            return HttpError(400, "Senha atual incorreta")
+    else:
+        return HttpError(402, "As senhas não coincidem")
+    
+
+@router.put('/atualizar_redes_sociais', response=UserOut)
+def update_social_medias(request, user: UserSocialMedias):
+    user_data = request.auth
+    if user.user_youtube:
+        user_data.user_youtube = user.user_youtube
+    if user.user_twitch:
+        user_data.user_twitch = user.user_twitch
+    if user.user_instagram:
+        user_data.user_instagram = user.user_instagram
+    if user.user_twitter:
+        user_data.user_twitter = user.user_twitter
+    user_data.save()
+    return user_data

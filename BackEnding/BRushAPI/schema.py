@@ -24,12 +24,22 @@ class UserOut(Schema):
     user_idioma: str = None
     user_games: str = None
     user_pais: str = None
+    user_banner: str = None
+    user_youtube : str = None
+    user_twitch : str = None
+    user_instagram : str = None
+    user_twitter : str = None
     is_confirmed: bool = None
 
 class UserResponse(Schema):
     mensagem: str
     
 
+class UserSocialMedias(Schema):
+    user_twitter: str = None
+    user_youtube : str = None
+    user_twitch : str = None
+    user_instagram : str = None
 class UserLogin(Schema):
     user_email: str
     user_password: str
@@ -37,8 +47,16 @@ class UserLogin(Schema):
 class UserPut(Schema):
     user_name: Optional[str] = ''
     user_email: Optional[str] = ''
-    user_password: Optional[str] = ''
-    user_birthday: Optional[date] = ''
+    user_birthday: date = None
+    user_idioma: Optional[str] = ''
+    user_games: Optional[str] = ''
+    user_pais: Optional[str] = ''
+
+
+class UserChangePassword(Schema):
+    senha_atual: str
+    senha_nova: str
+    confirmar_senha: str
 
 class TeamIn(Schema):
     team_name: str
