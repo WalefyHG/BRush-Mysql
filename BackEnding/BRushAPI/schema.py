@@ -84,4 +84,5 @@ class NoticeOut(Schema):
     notice_title: str
     notice_content: str
     notice_date: date = None
+    notice_image: str = None
     notice_writer: UserOut = None

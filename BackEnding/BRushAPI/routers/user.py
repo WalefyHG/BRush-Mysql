@@ -121,21 +121,29 @@ def get_user_perfil_by_userName(request, user_name: str):
 @router.post("/criando", response=UserResponse, auth=None)
 def create_user(request, user: UserIn, image: Optional[UploadedFile] = File(None)):
     password_hash = make_password(user.user_password)
-    user_data = User.objects.create(
-        user_name=user.user_name,
-        user_email=user.user_email,
-        user_password=password_hash,
-        user_birthday=user.user_birthday,
-        user_firstName=user.user_firstName,
-        user_lastName=user.user_lastName,
-        user_image= image,
-        user_idioma= user.user_idioma,
-        user_games= user.user_games,
-        user_pais= user.user_pais
-    )
+    verificarion_data = User.objects.filter(user_email=user.user_email).first()
     
-    user_data.save()
-    return {"mensagem": "Usuário criado com sucesso!"}
+    if(verificarion_data):
+        if(user.user_email == verificarion_data.user_email):
+            raise HttpError(302,"Email já cadastrado")
+        elif(user.user_name == verificarion_data.user_name):
+            raise HttpError(302,"Nome de usuário já cadastrado")
+    else:
+        user_data = User.objects.create(
+            user_name=user.user_name,
+            user_email=user.user_email,
+            user_password=password_hash,
+            user_birthday=user.user_birthday,
+            user_firstName=user.user_firstName,
+            user_lastName=user.user_lastName,
+            user_image= image,
+            user_idioma= user.user_idioma,
+            user_games= user.user_games,
+            user_pais= user.user_pais
+        )
+
+        user_data.save()
+        return {"mensagem": "Usuário criado com sucesso!"}
 
 @router.post("/login", auth=None)
 def login(request, user: UserLogin):
@@ -154,9 +162,9 @@ def login(request, user: UserLogin):
                 token = AccessToken.for_user(user_data)
                 return {"response": response, "token": str(token)}
         else:
-            return 400, {"message":"Credenciais inválidas"}
+            raise HttpError(400,"Credenciais inválidas")
     except User.DoesNotExist:
-        raise HttpError(404, detail="Usuário não encontrado")
+        raise HttpError(404,"Usuário não encontrado")
 
 
 @router.get("/pesquisar/{user_firstName}", response=List[UserOut])
